@@ -1,5 +1,6 @@
+from copy import deepcopy
+
 import torch.nn as nn
-import torchvision
 
 # Load in relevant libraries, and alias where appropriate
 import torchvision.transforms as transforms
@@ -22,8 +23,10 @@ for idx, i in enumerate(os.listdir("train_pics/")):
         train_df["label"][idx] = 2
     if "three" in i:
         train_df["label"][idx] = 3
-    if "unopened" in i:
+    if "four" in i:
         train_df["label"][idx] = 4
+    if "unopened" in i:
+        train_df["label"][idx] = 5
 
 train_df.to_csv(r'train_csv.csv', index=False, header=True)
 
@@ -51,7 +54,7 @@ class CustomDataset(Dataset):
 # Define relevant variables for the ML task
 batch_size = 8
 learning_rate = 0.001
-num_epochs = 100
+num_epochs = 20
 
 all_transform = transforms.Compose([transforms.Resize((32, 32)),
                                     transforms.ToTensor(),
@@ -82,7 +85,7 @@ class LeNet5(nn.Module):
         self.relu = nn.ReLU()
         self.fc1 = nn.Linear(120, 84)
         self.relu1 = nn.ReLU()
-        self.fc2 = nn.Linear(84, 5)
+        self.fc2 = nn.Linear(84, 6)
 
     def forward(self, x):
         out = self.layer1(x)
@@ -125,4 +128,4 @@ for epoch in range(num_epochs):
               .format(epoch + 1, num_epochs, i + 1, total_step, loss.item()))
 
 print('Finished Training')
-torch.save(model, "cnn.pt")
+torch.save(deepcopy(model.state_dict()), "cnn.pt")
