@@ -1,5 +1,3 @@
-from copy import deepcopy
-
 import torch.nn as nn
 
 # Load in relevant libraries, and alias where appropriate
@@ -11,24 +9,6 @@ import torch
 from torch.utils.data import Dataset, DataLoader
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
-train_df = pd.DataFrame(columns=["img_path", "label"])
-train_df["img_path"] = os.listdir("train_pics/")
-for idx, i in enumerate(os.listdir("train_pics/")):
-    if "clear" in i:
-        train_df["label"][idx] = 0
-    if "one" in i:
-        train_df["label"][idx] = 1
-    if "two" in i:
-        train_df["label"][idx] = 2
-    if "three" in i:
-        train_df["label"][idx] = 3
-    if "four" in i:
-        train_df["label"][idx] = 4
-    if "unopened" in i:
-        train_df["label"][idx] = 5
-
-train_df.to_csv(r'train_csv.csv', index=False, header=True)
 
 class CustomDataset(Dataset):
     def __init__(self, annotations_file, img_dir, transform=None, target_transform=None):
@@ -98,34 +78,34 @@ class LeNet5(nn.Module):
         out = self.fc2(out)
         return out
 
+def train():
+    model = LeNet5().to(device)
 
-model = LeNet5().to(device)
+    # Setting the loss function
+    cost = nn.CrossEntropyLoss()
 
-# Setting the loss function
-cost = nn.CrossEntropyLoss()
+    # Setting the optimizer with the model parameters and learning rate
+    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
-# Setting the optimizer with the model parameters and learning rate
-optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+    # this is defined to print how many steps are remaining when training
+    total_step = len(train_loader)
 
-# this is defined to print how many steps are remaining when training
-total_step = len(train_loader)
+    for epoch in range(num_epochs):
+        for i, (images, labels) in enumerate(train_loader):
+            images = images.to(device)
+            labels = labels.to(device)
 
-for epoch in range(num_epochs):
-    for i, (images, labels) in enumerate(train_loader):
-        images = images.to(device)
-        labels = labels.to(device)
+            # Forward pass
+            outputs = model(images)
+            loss = cost(outputs, labels)
 
-        # Forward pass
-        outputs = model(images)
-        loss = cost(outputs, labels)
+            # Backward and optimize
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
 
-        # Backward and optimize
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+            print('Epoch [{}/{}], Step [{}/{}], Loss: {:.7f}'
+                  .format(epoch + 1, num_epochs, i + 1, total_step, loss.item()))
 
-        print('Epoch [{}/{}], Step [{}/{}], Loss: {:.7f}'
-              .format(epoch + 1, num_epochs, i + 1, total_step, loss.item()))
-
-print('Finished Training')
-torch.save(deepcopy(model.state_dict()), "cnn.pt")
+    print('Finished Training')
+    torch.save(model.state_dict(), "cnn.pth")
