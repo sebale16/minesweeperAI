@@ -1,6 +1,6 @@
 # Minesweeper AI
 ## Demo
-TODO
+![](https://github.com/minesweeperAI/minesweeper_bot_demo1.gif)
 ## How it works
 The bot takes a screenshot of every tile on the board, runs it through the trained CNN, and outputs to a 2d array representing the rows and columns of the board.
 Then, the algorithm computes which mines are bombs by reading the marker present on an open tile and counting the number of unopened tiles around it. 
