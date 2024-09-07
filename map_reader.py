@@ -82,6 +82,8 @@ def main():
                 unopened_tiles_but_bomb_x = None
                 unopened_tiles_but_bomb_y = None
                 unopened_tiles = []
+                xs = []
+                ys = []
                 unopened_tiles_but_no_bomb_xs = []
                 unopened_tiles_but_no_bomb_ys = []
                 if i == 0:
@@ -92,6 +94,8 @@ def main():
                                     continue
                                 else:
                                     if bomb_map[i + k][j + l] == 1:
+                                        xs.append(k)
+                                        ys.append(l)
                                         bombs_around_count += 1
                                     if board_map[i + k][j + l] == 5:
                                         unopened_tile_count += 1
@@ -108,6 +112,8 @@ def main():
                                     continue
                                 else:
                                     if bomb_map[i + k][j + l] == 1:
+                                        xs.append(k)
+                                        ys.append(l)
                                         bombs_around_count += 1
                                     if board_map[i + k][j + l] == 5:
                                         unopened_tile_count += 1
@@ -125,6 +131,8 @@ def main():
                                     continue
                                 else:
                                     if bomb_map[i + k][j + l] == 1:
+                                        xs.append(k)
+                                        ys.append(l)
                                         bombs_around_count += 1
                                     if board_map[i + k][j + l] == 5:
                                         unopened_tile_count += 1
@@ -143,6 +151,8 @@ def main():
                                     continue
                                 else:
                                     if bomb_map[i + k][j + l] == 1:
+                                        xs.append(k)
+                                        ys.append(l)
                                         bombs_around_count += 1
                                     if board_map[i + k][j + l] == 5:
                                         unopened_tile_count += 1
@@ -160,6 +170,8 @@ def main():
                                     continue
                                 else:
                                     if bomb_map[i + k][j + l] == 1:
+                                        xs.append(k)
+                                        ys.append(l)
                                         bombs_around_count += 1
                                     if board_map[i + k][j + l] == 5:
                                         unopened_tile_count += 1
@@ -177,6 +189,8 @@ def main():
                                     continue
                                 else:
                                     if bomb_map[i + k][j + l] == 1:
+                                        xs.append(k)
+                                        ys.append(l)
                                         bombs_around_count += 1
                                     if board_map[i + k][j + l] == 5:
                                         unopened_tile_count += 1
@@ -195,6 +209,8 @@ def main():
                                     continue
                                 else:
                                     if bomb_map[i + k][j + l] == 1:
+                                        xs.append(k)
+                                        ys.append(l)
                                         bombs_around_count += 1
                                     if board_map[i + k][j + l] == 5:
                                         unopened_tile_count += 1
@@ -212,6 +228,8 @@ def main():
                                     continue
                                 else:
                                     if bomb_map[i + k][j + l] == 1:
+                                        xs.append(k)
+                                        ys.append(l)
                                         bombs_around_count += 1
                                     if board_map[i + k][j + l] == 5:
                                         unopened_tile_count += 1
@@ -229,6 +247,8 @@ def main():
                                     continue
                                 else:
                                     if bomb_map[i + k][j + l] == 1:
+                                        xs.append(k)
+                                        ys.append(l)
                                         bombs_around_count += 1
                                     if board_map[i + k][j + l] == 5:
                                         unopened_tile_count += 1
@@ -259,6 +279,11 @@ def main():
                                     bomb_map[i + unopened_tiles_but_no_bomb_xs[t]][j + unopened_tiles_but_no_bomb_ys[t]] = 1
                                     bombs_around_count += 1
                                     bombs_found += 1
+                    if bombs_around_count <= unopened_tile_count:
+                        for t in range(len(xs)):
+                            if bomb_map[i + xs[t]][j + ys[t]] != 1:
+                                bomb_map[i + xs[t]][j + ys[t]] = 1
+                                bombs_found += 1
                     if tile == bombs_around_count:
                         if i == 0:
                             if j == 0:
